@@ -4,6 +4,10 @@ import pymysql
 import traceback
 from Flask_Practice.api_restful.resources.models import UserModel
 from Flask_Practice.api_restful.resources.server import db
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 parser = reqparse.RequestParser()
 parser.add_argument('name')
@@ -20,6 +24,7 @@ class User(Resource):
                              user='root',
                              password='root',
                              database='api')
+
         cursor = db.cursor(pymysql.cursors.DictCursor)
         return db, cursor
 
@@ -95,10 +100,14 @@ class User(Resource):
 class Users(Resource):
     def db_init(self):
         # db = pymysql.connect('localhost', 'root', 'password', 'root')
-        db = pymysql.connect(host='localhost',
-                             user='root',
-                             password='root',
-                             database='api')
+        # db = pymysql.connect(host='localhost',
+        #                      user='root',
+        #                      password='root',
+        #                      database='api')
+        db = pymysql.connect(host=os.getenv('DB_HOST'),
+                             user=os.getenv('DB_USER'),
+                             password=os.getenv('DB_PASSWORD'),
+                             database=os.getenv('DB_SCHEMA'))
         cursor = db.cursor(pymysql.cursors.DictCursor)
         return db, cursor
 
